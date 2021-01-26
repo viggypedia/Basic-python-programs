@@ -1,7 +1,7 @@
 # File Name: nxn square pattern.py
 # Purpose: To print a square block pattern of #
 # Input: 1. Users choice 
-# Output: 1.character for given ascii code 2.ascii code for given character
+# Output: A block of nxn pattern of #
 # Arguments: None
 # Variables: n(users choice),i(loop number one),j(loop number two)
 # Calls :None
