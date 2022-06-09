@@ -1,6 +1,10 @@
-for i in range(100,401):
-    a=i//100
-    b=(i-(a*100))//10
-    c=(i-(a*100)-(b*10))
-    if (a%2==0 and b%2==0 and c%2==0):
-        print(f"{a},{b},{c}")
+a=[[(9,15),(7,9)],[(11,1),(22,19)]]
+x=[]
+z=[]
+for l in range(len((a)[0][0])):
+    for i in range(len(a)):
+        for j in range(len((a)[i])):
+            z.append(a[i][j][l])
+        x.append(tuple(z))
+        z=[]
+print(x)

@@ -1,6 +1,14 @@
-a= int (input("Enter number1: "))
-b=int(input("Enter number2: "))
-if(a+b>=105 and a+b<=200):
-    print("200")
-else:
-    print(a+b)
+a=int(input("Enter a three digit number: "))
+b=a%10
+c=((a%100)-b)//10
+d=a//100
+
+print("All the possible combinations of the given number is: ")
+print(f"{b}{c}{d}")
+print(f"{c}{d}{b}")
+print(f"{d}{b}{c}")
+print(f"{b}{d}{c}")
+print(f"{c}{b}{d}")
+print(f"{d}{c}{b}")
+
+
