@@ -1,34 +1,48 @@
-#Question 2:
-#AIM: Write a Python program to crate four empty classes, CTECH, CINTEL, NWC  and DSBS. Now create some instances and check whether they are instances of the said classes or not. Also, check whether the said classes are subclasses of the built-in object class or not.
+import sqlite3
 
-class CTECH:
-    pass 
-class CINTEL:
-    pass 
-class NWC:
-    pass 
+#By: S.Vignesh Nelakantan
+#Reg.No:RA2011003001530
 
-class DSBS:
-    pass 
+# Connect to database
+connection = sqlite3.connect('q2.db')
 
-student1 = CTECH()
-marks1 = CINTEL()
-stu=NWC()
-ma=DSBS()
+# Create cursor
+cursor = connection.cursor()
 
-print(isinstance(student1, CTECH))
-print(isinstance(marks1, CTECH))
-print(isinstance(stu, CTECH))
-print(isinstance(ma, CTECH))
+# Create table
+cursor.execute("CREATE TABLE movies (movie_id integer, movie_name text, genre text, language text, rating real)")
 
-print(isinstance(marks1, CINTEL)) 
-print(isinstance(student1, CINTEL))
-print(isinstance(stu, CINTEL))
-print(isinstance(ma, CINTEL))
+# insert data
+movies = [
+    (101, "kgf2", "action", "hindi", 8.5),
+    (102, "spiderman", "superhero", "english", 8.1),
+    (103, "doctor strange", "mystic", "english", 8.7),
+]
 
-print("\nCheck whether the said classes are subclasses of the built-in object class or not.")
-print(issubclass(CTECH, object))
-print(issubclass(CINTEL, object))
-print(issubclass(NWC, object))
-print(issubclass(DSBS, object))
+cursor.executemany("INSERT INTO movies VALUES (?, ?, ?, ?, ?)", movies)
+
+# query to db
+cursor.execute("UPDATE movies SET rating = (rating + (rating * 0.1))")
+cursor.execute("SELECT movie_name, rating from movies")
+movies = cursor.fetchall()
+print(movies)
+print('-----------------------------------------------------')
+
+# delete db
+cursor.execute("DELETE from movies WHERE movie_id = 102")
+cursor.execute("SELECT * FROM movies")
+d = cursor.fetchall()
+print(d)
+print('-----------------------------------------------------')
+
+cursor.execute("SELECT movie_name, rating FROM movies WHERE rating > 3")
+r = cursor.fetchall()
+print(r)
+print('-----------------------------------------------------')
+
+# Commit changes
+connection.commit()
+
+# Close connection
+connection.close()
 

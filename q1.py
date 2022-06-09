@@ -1,29 +1,54 @@
+from datetime import datetime
+import sqlite3
 
-# Question 1: 
+#By: S. Vignesh Nelakantan
+#Reg.No: RA2011003010530
 
+connection = sqlite3.connect('q1.db')
 
+cursor = connection.cursor()
 
-class SRMIST:
-    school = 'SRMIST'
-    dept1 = 'Computer Science'
-    dept2 = 'Artificial Intelligence'
-    dept3 = 'Mechanical Engineering'
-    dept4 = 'Biotech'
-print("Original attributes and their values of the Student class:")
-for attr, value in SRMIST.__dict__.items():
-    if not attr.startswith('_'):
-        print(f'{attr} -> {value}')
-print("\nAfter adding the specialization, attributes and their values with the said class:")
-SRMIST.specialization = 'Blockchain'
-for attr, value in SRMIST.__dict__.items():
-    if not attr.startswith('_'):
-        print(f'{attr} -> {value}')
-print("\nAfter removing the dept1,dept2 attributes and their values from the said class:")
-del SRMIST.dept1
-del SRMIST.dept2
-#delattr(Student, 'student_name')
-for attr, value in SRMIST.__dict__.items():
-    if not attr.startswith('_'):
-        print(f'{attr} -> {value}')
+cursor.execute("""CREATE TABLE recipes (
+    name text,
+    description text,
+    category_id integer,
+    chef_id text,
+    created timestamp
+)""")
 
+# insert data
+time = datetime.now()
+recipes = [
+    ("paneer masala", "p m", 101, "BL00001", time),
+    ("chicken masala", "c m", 102, "BL00002", time),
+    ("butter naan", "chinese", 103, "BL00003", time),
+]
 
+cursor.executemany("INSERT INTO recipes VALUES (?, ?, ?, ?, ?)", recipes)
+
+# query to db
+cursor.execute("SELECT * FROM recipes")
+recipes = cursor.fetchall()
+print(len(recipes))
+print("-----------------------------------------------------")
+
+cursor.execute("SELECT * FROM recipes WHERE description = 'chinese'")
+recipes = cursor.fetchall()
+print(len(recipes))
+print('-----------------------------------------------------')
+
+cursor.execute("SELECT category_id, name FROM recipes WHERE chef_id = 'BL00002'")
+r = cursor.fetchall()
+print(r)
+print('-----------------------------------------------------')
+
+cursor.execute("SELECT description FROM recipes WHERE name LIKE 'p%'")
+d = cursor.fetchall()
+print(d)
+print('-----------------------------------------------------')
+
+# Commit changes
+connection.commit()
+
+# Close connection
+connection.close()

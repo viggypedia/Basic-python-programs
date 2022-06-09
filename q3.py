@@ -1,18 +1,77 @@
-#Question 3:
-#AIM:Write a program to print the names of the departments students by creating a Dept class. If no name is passed while creating an object of the Dept class, then the name should be "SCO", otherwise the name should be equal to the String value passed while creating the object of the Dept class.
+import sqlite3
 
-class Dept:
-    def __init__(self, *args): 
-        if len(args) == 1: 
-            self.dept=args[0] 
-        elif len(args) == 0: 
-            self.dept="SCO" 
-    def deptname(self):
-        print(self.dept)
+#By: S Vignesh Nelakantan
+#Reg.No: RA2011003010530
 
-d1=Dept()
-d1.deptname()
+# Connect to database
+connection = sqlite3.connect('q3.db')
 
-d2=Dept("CSE")
-d2.deptname()
+# Create cursor
+cursor = connection.cursor()
+
+# Create table
+# orders table
+cursor.execute("""CREATE TABLE orders (
+    order_id integer PRIMARY KEY,
+    product_id integer,
+    unit_price integer,
+    quantity integer
+)""")
+
+# # insert data
+orders = [
+    (101, 1, 450, 2), 
+    (102, 2, 500, 3)
+]
+
+cursor.executemany("INSERT INTO orders VALUES (?, ?, ?, ?)", orders)
+
+# products table
+cursor.execute("""CREATE TABLE products (
+    product_id integer PRIMARY KEY,
+    product_name text,
+    unit_price integer,
+    supplier_id integer,
+    package integer,
+    order_id integer,
+    FOREIGN KEY (order_id) REFERENCES orders (order_id)
+)""")
+
+# insert data
+products = [
+    (1, "material ui", 450, 1, 5, 101),
+    (2, "tailwind css", 500, 2, 6, 102)
+]
+
+cursor.executemany("INSERT INTO products VALUES (?, ?, ?, ?, ?, ?)", products)
+
+# query to db
+cursor.execute("SELECT * FROM orders")
+orders = cursor.fetchall()
+cursor.execute("SELECT * FROM products")
+products = cursor.fetchall()
+print(orders)
+print('-----------------------------------------------------')
+print(products)
+print("-----------------------------------------------------")
+
+cursor.execute("SELECT product.package-orde.quantity FROM products product, orders orde WHERE product.order_id = orde.order_id")
+products = cursor.fetchall()
+print(products)
+print("-----------------------------------------------------")
+
+cursor.execute("SELECT unit_price FROM products ORDER BY supplier_id DESC")
+products = cursor.fetchall()
+print(products)
+print('-----------------------------------------------------')
+
+cursor.execute("SELECT product_name, supplier_id, order_id FROM products")
+products = cursor.fetchall()
+print(products)
+
+# Commit changes
+connection.commit()
+
+# Close connection
+connection.close()
 
